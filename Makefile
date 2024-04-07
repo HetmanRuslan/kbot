@@ -16,21 +16,24 @@ test:
 get:
 	go get
 
-build-linux:
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -v -o kbot-linux-amd64 -ldflags "-X=github.com/HetmanRuslan/kbot/cmd.appVersion=$(VERSION)"
+linux: ## Build for Linux
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o my-binary-linux .
 
-build-arm:
-	CGO_ENABLED=0 GOOS=linux GOARCH=arm go build -v -o kbot-linux-arm -ldflags "-X=github.com/HetmanRuslan/kbot/cmd.appVersion=$(VERSION)"
+arm: ## Build for ARM
+	CGO_ENABLED=0 GOOS=linux GOARCH=arm go build -o my-binary-arm .
 
-build-macos:
-	CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -v -o kbot-macos-amd64 -ldflags "-X=github.com/HetmanRuslan/kbot/cmd.appVersion=$(VERSION)"
+macos: ## Build for macOS
+	CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o my-binary-macos .
 
-build-windows:
-	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -v -o kbot-windows-amd64.exe -ldflags "-X=github.com/HetmanRuslan/kbot/cmd.appVersion=$(VERSION)"
-
+windows: ## Build for Windows
+	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o my-binary-windows.exe .
 
 build: format get
-	CGO_ENABLED=0 GOOS=$(TARGETOS) GOARCH=$(TARGETARCH) go build -v -o kbot -ldflags "-X=github.com/HetmanRuslan/kbot/cmd.appVersion=$(VERSION)"
+	@for os in $(TARGETOS); do \
+		for arch in $(TARGETARCH); do \
+			CGO_ENABLED=0 GOOS=$$os GOARCH=$$arch go build -v -o kbot-$$os-$$arch -ldflags "-X=github.com/HetmanRuslan/kbot/cmd.appVersion=$(VERSION)"; \
+		done \
+	done
 
 image:
 	docker build . -t ${REGISTRY}/${APP}:${VERSION}-${TARGETARCH}
@@ -39,4 +42,4 @@ push:
 	docker push ${REGISTRY}/${APP}:${VERSION}-${TARGETARCH}
 
 clean:
-	rm -rf kbot
+	rm -rf kbot-*
