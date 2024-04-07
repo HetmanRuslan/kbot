@@ -1,45 +1,40 @@
 APP=$(shell basename $(shell git remote get-url origin))
 REGISTRY=hetmanruslan10
 VERSION := $(shell git describe --tags --abbrev=0)-$(shell git rev-parse --short HEAD)
-TARGETOS = linux darwin
 TARGETARCH = amd64 arm
 
 format:
-	gofmt -s -w ./
+    gofmt -s -w ./
 
 lint:
-	golint ./...
+    golint ./...
 
 test:
-	go test -v ./...
+    go test -v ./...
 
 get:
-	go get
+    go get
 
 linux: ## Build for Linux
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o my-binary-linux .
+    CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o kbot-linux-amd64 .
 
 arm: ## Build for ARM
-	CGO_ENABLED=0 GOOS=linux GOARCH=arm go build -o my-binary-arm .
+    CGO_ENABLED=0 GOOS=linux GOARCH=arm go build -o kbot-linux-arm .
 
 macos: ## Build for macOS
-	CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o my-binary-macos .
+    CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o kbot-macos-amd64 .
 
 windows: ## Build for Windows
-	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o my-binary-windows.exe .
+    CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o kbot-windows-amd64.exe .
 
 build: format get
-	@for os in $(TARGETOS); do \
-		for arch in $(TARGETARCH); do \
-			CGO_ENABLED=0 GOOS=$$os GOARCH=$$arch go build -v -o kbot-$$os-$$arch -ldflags "-X=github.com/HetmanRuslan/kbot/cmd.appVersion=$(VERSION)"; \
-		done \
-	done
+    go build -v -o kbot -ldflags "-X=github.com/HetmanRuslan/kbot/cmd.appVersion=$(VERSION)"
 
 image:
-	docker build . -t ${REGISTRY}/${APP}:${VERSION}-${TARGETARCH}
+    docker buildx build --platform $(TARGETARCH) . -t ${REGISTRY}/${APP}:${VERSION} --push
 
 push:
-	docker push ${REGISTRY}/${APP}:${VERSION}-${TARGETARCH}
+    docker push ${REGISTRY}/${APP}:${VERSION}
 
 clean:
-	rm -rf kbot-*
+    rm -rf kbot kbot-*
