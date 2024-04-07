@@ -56,6 +56,17 @@ to quickly create a Cobra application.`,
 			}
 
 			return err
+
+		})
+
+		// Обробник для повідомлення "hello"
+		kbot.Handle("hello", func(m telebot.Context) error {
+			// Отримання інформації про користувача, який відправив повідомлення
+			user := m.Sender()
+
+			// Відправлення привітання
+			_, err := kbot.Send(user, "Hello! How can I assist you?")
+			return err
 		})
 
 		kbot.Start()
