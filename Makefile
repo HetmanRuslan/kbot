@@ -16,6 +16,15 @@ macos:
 windows:
 	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o $(APP_NAME)-windows-amd64.exe .
 
+build:
+	go build -o $(APP_NAME) .
+
+image: build
+	docker build -t $(IMAGE_TAG):latest .
+
+push: image
+	docker push $(IMAGE_TAG):latest
+
 clean:
 	rm -f $(APP_NAME)-*
 	docker rmi $(IMAGE_TAG):latest
