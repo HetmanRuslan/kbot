@@ -1,4 +1,4 @@
-.PHONY: linux arm macos windows clean image
+.PHONY: linux arm macos windows clean
 
 APP_NAME := myapp
 REGISTRY := myregistry
@@ -17,6 +17,3 @@ windows:
 
 clean:
     rm -f $(APP_NAME)-*
-
-image:
-    docker build . -t $(REGISTRY)/$(APP_NAME)
