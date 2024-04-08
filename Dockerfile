@@ -16,12 +16,17 @@
 # CMD [""]
 
 # Build stage
-FROM golang:1.20 AS builder
-WORKDIR /app
-COPY . .
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o myapp-linux-amd64 .
+FROM quay.io/projectquay/golang:1.20 AS builder
 
-# Final stage
+WORKDIR /go/src/app
+COPY . .
+
+RUN go get
+RUN make build
+
 FROM scratch
-COPY --from=builder /app/myapp-linux-amd64 /app/myapp
-ENTRYPOINT ["/app/myapp"]
+
+COPY --from=builder /go/src/app/myapp /usr/local/bin/
+
+ENTRYPOINT ["/usr/local/bin/myapp"]
+CMD [""]

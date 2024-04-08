@@ -18,4 +18,4 @@ windows:
 
 clean:
 	rm -f $(APP_NAME)-*
-	docker rmi $(IMAGE_TAG)
+	docker rmi $(IMAGE_TAG):latest
