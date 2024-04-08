@@ -17,7 +17,7 @@ windows:
 	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o $(APP_NAME)-windows-amd64.exe .
 
 build:
-	go build -o $(APP_NAME) .
+	/usr/local/go/bin/go build -o myapp .
 
 image: build
 	docker build -t $(IMAGE_TAG):latest .
