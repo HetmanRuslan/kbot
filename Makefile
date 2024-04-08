@@ -37,6 +37,11 @@ image:
 push:
 	docker push ${REGISTRY}/${APP}:${VERSION}-${TARGETARCH}
 
+image:
+	docker buildx build . -t ${REGISTRY}/${APP}:${VERSION}-${TARGETARCH}
+
 clean:
 	rm -rf kbot
 	docker rmi ${REGISTRY}/${APP}:${VERSION}-${TARGETARCH}
+	docker rmi arm64:latest
+
