@@ -1,17 +1,36 @@
-Kbot Kbot is a versatile Telegram bot designed to streamline communication and automate tasks within your Telegram groups or channels. With Kbot, you can effortlessly manage messages, schedule reminders, and execute commands, all from the comfort of your Telegram interface.
+Test Telegram Bot in Golang
+This is a simple Telegram bot implemented in Golang using the Cobra CLI library and the telebot package. Bot: t.me/hetmanruslan_bot
 
-Features Message Management: Kbot allows you to efficiently manage messages within your Telegram groups or channels. From deleting messages to forwarding them to specific users, Kbot simplifies message administration.
+Installation
+To run this bot, you need to have Go installed on your system. You can install it from here.
 
-Scheduler: Schedule reminders, announcements, or any other messages to be sent at a specified date and time. Never miss an important event again with Kbot's scheduling feature.
+Clone the repository:
 
-Command Execution: Execute custom commands to perform various tasks directly from your Telegram interface. Whether it's fetching information or triggering actions in connected services, Kbot has you covered.
+git clone https://github.com/HetmanRuslan/kbot.git
+Navigate to the project directory:
 
-Customizable: Tailor Kbot to your specific needs with its customizable features. From defining automated responses to setting up command shortcuts, personalize Kbot to enhance your Telegram experience.
+cd ./kbot
+Build and run the bot:
 
-Installation To deploy Kbot, follow these simple steps:
+go build && ./kbot start
+Usage
+This bot listens for incoming messages and performs actions based on the commands or text received.
 
-Clone the repository to your local machine. Navigate to the project directory. Install the necessary dependencies using go mod tidy. Set up your Telegram Bot API token in the environment variable TELE_TOKEN. Build the project using go build. Run the executable file generated to start Kbot. Usage Once Kbot is up and running, interact with it using the following commands:
+Commands
+/start: Starts the bot and responds "Hello!".
+/something: Responds with "Lorem ipsum".
+/version: Responds with the version of the bot.
+Other Messages
+The bot will reverse any other text messages it receives.
 
-/start: Initiate the bot and display a welcome message. /help: View the list of available commands and their descriptions. /hello: Greet the bot and receive a friendly response. Contributing Contributions to Kbot are welcome! Whether it's bug fixes, new features, or improvements to existing functionality, feel free to submit pull requests.
+Configuration
+This bot requires a Telegram Bot Token (TELE_TOKEN) environment variable to be set. You can obtain a token by creating a bot on Telegram using the BotFather.
 
-License This project is licensed under the MIT License.
+Set the environment variable:
+
+export TELE_TOKEN="your-bot-token"
+Dependencies
+Cobra: A CLI library for Go.
+telebot: A Telegram bot framework for Go.
+License
+MIT License
