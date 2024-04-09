@@ -14,9 +14,24 @@ import (
 )
 
 var (
-	// TeleToken Bot
+	// TeleToken bot
 	TeleToken = os.Getenv("TELE_TOKEN")
 )
+
+// function, which takes a string as
+// argument and return the reverse of string.
+func reverse(s string) string {
+	rns := []rune(s) // convert to rune
+	for i, j := 0, len(rns)-1; i < j; i, j = i+1, j-1 {
+
+		// swap the letters of the string,
+		// like first with last and so on.
+		rns[i], rns[j] = rns[j], rns[i]
+	}
+
+	// return the reversed string.
+	return string(rns)
+}
 
 // kbotCmd represents the kbot command
 var kbotCmd = &cobra.Command{
@@ -31,8 +46,7 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 
-		fmt.Printf("kbot %s started", appVersion)
-
+		fmt.Println("kbot version", appVersion)
 		kbot, err := telebot.NewBot(telebot.Settings{
 			URL:    "",
 			Token:  TeleToken,
@@ -45,32 +59,24 @@ to quickly create a Cobra application.`,
 		}
 
 		kbot.Handle(telebot.OnText, func(m telebot.Context) error {
-
-			log.Print(m.Message().Payload, m.Text())
-
-			payload := m.Message().Payload
+			payload := m.Text()
+			log.Print(m.Message().Payload, payload)
 
 			switch payload {
-			case "hello":
-				err = m.Send(fmt.Sprintf("Hello I'm Kbot %s!", appVersion))
+			case "/start":
+				err = m.Send("Hello!")
+			case "/something":
+				err = m.Send("Lorem ipsum")
+			case "/version":
+				err = m.Send(appVersion)
+			default:
+				err = m.Send(reverse(payload))
 			}
 
-			return err
-
-		})
-
-		// Обробник для повідомлення "hello"
-		kbot.Handle("hello", func(m telebot.Context) error {
-			// Отримання інформації про користувача, який відправив повідомлення
-			user := m.Sender()
-
-			// Відправлення привітання
-			_, err := kbot.Send(user, "Hello! How can I assist you?")
 			return err
 		})
 
 		kbot.Start()
-
 	},
 }
 
